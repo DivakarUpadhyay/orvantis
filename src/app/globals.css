@@ -1,26 +1,378 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Fluent / Windows 11 design tokens.
+ * Surfaces follow the Mica → Layer → Card → Control hierarchy; colours and
+ * stroke opacities mirror WinUI 3 defaults so the site feels native on Windows.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f3f3f3; /* Mica base */
+  --surface-2: rgba(255, 255, 255, 0.38); /* alternate section (translucent layer) */
+  --surface-3: rgba(0, 0, 0, 0.0373); /* subtle fill */
+  --card: rgba(255, 255, 255, 0.5); /* translucent card */
+  --card-solid: #fbfbfb; /* control / text field */
+  --layer: rgba(255, 255, 255, 0.5);
+  --ink: #1a1a1a;
+  --muted: #474747;
+  --line: rgba(0, 0, 0, 0.0803);
+  --line-strong: rgba(0, 0, 0, 0.4458); /* control bottom stroke */
+  --brand: #005fb8; /* Windows accent (light) */
+  --brand-strong: #196ebf;
+  --on-brand: #ffffff;
+  --accent: #0099bc;
+  --bloom-1: #3d7eff;
+  --bloom-2: #8a5cf5;
+  --bloom-3: #00b7c3;
+  --ok: #0f7b0f;
+  --danger: #c42b1c;
+  --warn: #9d5d00;
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.08);
+  --shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.14), 0 0 1px rgba(0, 0, 0, 0.18);
+  --shadow-window: 0 32px 64px rgba(0, 0, 0, 0.18), 0 2px 21px rgba(0, 0, 0, 0.12);
+  --ease-fluent: cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.dark {
+  --surface: #202020;
+  --surface-2: rgba(255, 255, 255, 0.025);
+  --surface-3: rgba(255, 255, 255, 0.0605);
+  --card: rgba(255, 255, 255, 0.045);
+  --card-solid: #2b2b2b;
+  --layer: rgba(58, 58, 58, 0.3);
+  --ink: #ffffff;
+  --muted: #d0d0d0;
+  --line: rgba(255, 255, 255, 0.0837);
+  --line-strong: rgba(255, 255, 255, 0.5442);
+  --brand: #60cdff; /* Windows accent (dark) */
+  --brand-strong: #5abbe8;
+  --on-brand: #000000;
+  --accent: #4cc2ff;
+  --bloom-1: #2f6bff;
+  --bloom-2: #7c4dff;
+  --bloom-3: #00c8d7;
+  --ok: #6ccb5f;
+  --danger: #ff99a4;
+  --warn: #fce100;
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.26), 0 0 1px rgba(0, 0, 0, 0.4);
+  --shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.26), 0 0 1px rgba(0, 0, 0, 0.5);
+  --shadow-window: 0 32px 64px rgba(0, 0, 0, 0.56), 0 2px 21px rgba(0, 0, 0, 0.55);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-card: var(--card);
+  --color-card-solid: var(--card-solid);
+  --color-layer: var(--layer);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-danger: var(--danger);
+  --color-warn: var(--warn);
+  --font-sans: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: "Cascadia Code", "Cascadia Mono", Consolas, var(--font-geist-mono), monospace;
+  --ease-fluent: cubic-bezier(0.1, 0.9, 0.2, 1);
+  --animate-fade-in: flyout-in 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+  --animate-marquee: marquee 45s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-toast: toast-in 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+  --animate-bloom: bloom-spin 60s linear infinite;
+  --animate-caret: caret 1s steps(1) infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes flyout-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(110%); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bloom-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes caret {
+  50% { opacity: 0; }
+}
+@keyframes tile-peek {
+  0%, 42% { transform: translateY(0); }
+  50%, 92% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+@keyframes progress-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Accent button — WinUI "AccentButton" with elevation border */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-md border border-transparent bg-brand px-5 py-2 text-sm font-semibold text-on-brand transition duration-150 hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink active:scale-[0.98] active:opacity-90 disabled:pointer-events-none disabled:opacity-60;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  /* Standard button */
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-md border border-line bg-card-solid px-5 py-2 text-sm font-semibold text-ink transition duration-150 hover:bg-surface-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink active:scale-[0.98];
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  }
+  .dark .btn-ghost {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Card — translucent layer with hairline stroke */
+  .card {
+    @apply rounded-lg border bg-card p-6 transition duration-200;
+    border-color: color-mix(in srgb, var(--line) 100%, rgba(255, 255, 255, 0.35));
+    backdrop-filter: blur(24px) saturate(170%);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  .card-hover {
+    @apply hover:-translate-y-0.5;
+  }
+  .card-hover:hover {
+    background-color: color-mix(in srgb, var(--card-solid) 70%, transparent);
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-flyout);
+  }
+
+  /* Acrylic: blurred, tinted, with a faint noise texture (used by header and flyouts) */
+  .acrylic {
+    background-color: color-mix(in srgb, var(--card-solid) 72%, transparent);
+    backdrop-filter: blur(30px) saturate(160%);
+    -webkit-backdrop-filter: blur(30px) saturate(160%);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  }
+
+  /* Flyouts (mega menus, mobile menu). They sit inside the acrylic header,
+     where a nested backdrop-filter has no effect, so they use a near-opaque
+     surface for clean readability. */
+  .flyout {
+    background-color: #ffffff;
+    box-shadow: var(--shadow-flyout), 0 24px 48px rgba(0, 0, 0, 0.12);
+  }
+  .dark .flyout {
+    background-color: #2c2c2c;
+  }
+
+  /* Caption with a NavigationView-style selection pip */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-brand;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-3.5 w-[3px] rounded-full bg-brand;
+  }
+
+  .h-section {
+    @apply text-3xl font-semibold tracking-tight text-ink sm:text-4xl;
+  }
+  .text-gradient {
+    color: var(--brand);
+  }
+
+  /* TextBox — bottom stroke turns into a 2px accent line on focus */
+  .field {
+    @apply mt-1.5 block w-full rounded-md border border-line bg-card-solid px-3 py-2.5 text-sm text-ink placeholder:text-muted/80 transition focus:outline-none;
+    box-shadow: inset 0 -1px 0 var(--line-strong);
+  }
+  .field:hover {
+    background-color: color-mix(in srgb, var(--card-solid) 85%, var(--surface-3));
+  }
+  .field:focus {
+    @apply bg-surface;
+    box-shadow: inset 0 -2px 0 var(--brand);
+  }
+  .field[aria-invalid="true"] {
+    box-shadow: inset 0 -2px 0 var(--danger);
+  }
+
+  /* Soft Mica tint behind page heroes */
+  .grid-bg {
+    background:
+      radial-gradient(55% 80% at 88% -10%, color-mix(in srgb, var(--bloom-1) 26%, transparent), transparent 70%),
+      radial-gradient(45% 70% at 60% -20%, color-mix(in srgb, var(--bloom-2) 18%, transparent), transparent 70%),
+      radial-gradient(40% 60% at 0% 0%, color-mix(in srgb, var(--bloom-3) 12%, transparent), transparent 70%);
+  }
+
+  /* Fluent "reveal" highlight: a light that follows the pointer across the
+     surface and its border. Pointer position comes from RevealHighlight.tsx. */
+  .reveal,
+  .card-hover {
+    position: relative;
+    isolation: isolate;
+  }
+  .reveal::before,
+  .reveal::after,
+  .card-hover::before,
+  .card-hover::after {
+    content: "";
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .reveal::before,
+  .card-hover::before {
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 11%, transparent), transparent 65%);
+  }
+  .reveal::after,
+  .card-hover::after {
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 75%, transparent), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  }
+  .reveal:hover::before,
+  .reveal:hover::after,
+  .card-hover:hover::before,
+  .card-hover:hover::after {
+    opacity: 1;
+  }
+
+  /* Window chrome used by the hero "desktop" */
+  .window {
+    @apply overflow-hidden rounded-lg border border-line bg-card-solid;
+    box-shadow: var(--shadow-window);
+  }
+  .caption-btn {
+    @apply inline-flex h-8 w-11 items-center justify-center text-muted transition-colors hover:bg-surface-3;
+  }
+  .caption-btn.close:hover {
+    background: #c42b1c;
+    color: #fff;
+  }
+}
+
+/* Mica wallpaper: a fixed, softly coloured backdrop that glass surfaces blur. */
+.mica-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 55% at 92% 8%, color-mix(in srgb, var(--bloom-1) 22%, transparent), transparent 70%),
+    radial-gradient(40% 50% at 70% 95%, color-mix(in srgb, var(--bloom-2) 16%, transparent), transparent 70%),
+    radial-gradient(40% 50% at 4% 40%, color-mix(in srgb, var(--bloom-3) 16%, transparent), transparent 70%),
+    var(--surface);
+}
+.dark .card {
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Scroll progress bar (Chrome/Edge scroll-driven animation; hidden elsewhere) */
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 70;
+    background: linear-gradient(90deg, var(--bloom-3), var(--brand), var(--bloom-2));
+    transform-origin: 0 50%;
+    animation: progress-grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+/* Live-tile peek animation */
+.tile-peek {
+  animation: tile-peek var(--peek-duration, 9s) var(--ease-fluent) infinite;
+  animation-delay: var(--peek-delay, 0s);
+}
+
+/* Entrance motion: Fluent decelerate curve, staggered by RevealObserver. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.6s var(--ease-fluent),
+    transform 0.8s var(--ease-fluent);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Circular theme switch (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .scroll-progress { display: none; }
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(300%); }
 }

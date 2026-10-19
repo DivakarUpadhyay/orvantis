@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test artefacts (screenshots/ stays on disk but is too large for the repo; tests recreate it)
+/screenshots/
+/test-results/
+/playwright-report/
+/blob-report/
+/.outbox/
+/.outbox-test/
+!.env.example
